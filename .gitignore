@@ -1,0 +1,53 @@
+# Environments
+.env
+.venv
+venv/
+ENV/
+env/
+venv.bak/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Models and Large Files
+*.onnx
+modnet.onnx
+*.pt
+*.pth
+
+# Output and Test Images
+result.png
+test_result.png
+*.jpg
+*.jpeg
+*.png
+
+# Logs
+*.log
+
+# Caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+coverage.xml
+*.cover
+*.mo
+*.pot
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo

@@ -9,6 +9,7 @@ from PIL import Image
 import io
 import engine
 import traceback
+from download_model import download_modnet_model
 
 # ---------------- LOGGING ----------------
 logging.basicConfig(level=logging.INFO)
@@ -48,8 +49,11 @@ def warmup_model():
     is not painfully slow.
     """
     try:
-        logging.info("Warming up AI model...")
-        img = Image.new("RGBA", (10, 10))
+        logging.info("Checking and downloading MODNet model if missing...")
+        download_modnet_model()
+        logging.info("Warming up AI models...")
+        # Note: we use an RGB dummy image instead of RGBA to prevent issues in intermediate array conversions if any
+        img = Image.new("RGB", (10, 10))
         engine.process_image(img)
         logging.info("Model warmup complete")
     except Exception as e:

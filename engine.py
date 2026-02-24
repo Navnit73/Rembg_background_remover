@@ -7,8 +7,9 @@ import rembg
 MODNET_MODEL_PATH = "modnet.onnx"
 MAX_IMAGE_SIZE = 1200
 
-# Initialize global ONNX session
+# Initialize global sessions
 _modnet_session = None
+_rembg_session = None
 
 def get_modnet_session():
     global _modnet_session
@@ -23,6 +24,17 @@ def get_modnet_session():
             print(f"Error loading MODNet: {e}")
             _modnet_session = False  # Mark as failed so we don't keep retrying
     return _modnet_session
+
+def get_rembg_session():
+    global _rembg_session
+    if _rembg_session is None:
+        try:
+            _rembg_session = rembg.new_session("u2net")
+            print("Successfully loaded rembg u2net model.")
+        except Exception as e:
+            print(f"Error loading rembg: {e}")
+            _rembg_session = False
+    return _rembg_session
 
 def resize_image(image: Image.Image, max_size: int) -> Image.Image:
     """Resizes the image so its longest edge is at most `max_size`."""
@@ -118,8 +130,12 @@ def process_image(image: Image.Image) -> Image.Image:
     # 3. Fallback to rembg
     print("Falling back to rembg (u2net).")
     try:
-        session = rembg.new_session("u2net")
-        result = rembg.remove(image, session=session)
+        session = get_rembg_session()
+        if session:
+            result = rembg.remove(image, session=session)
+        else:
+            result = rembg.remove(image) # Try without session if loading failed
+
         # rembg.remove() returns a PIL Image in RGBA mode
         if isinstance(result, Image.Image):
             return result
